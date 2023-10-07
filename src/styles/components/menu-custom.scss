@@ -1,0 +1,12 @@
+.menu-custom{
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    padding-top: 60px;
+    background-color: #fff;
+
+    .ant-menu-title-content{
+        font-weight: 600;
+    }
+}

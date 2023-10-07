@@ -1,0 +1,116 @@
+$primary: #032541;
+$light-primary: #91a2b1;
+$secondary: #b443d6;
+
+$red: #da1e3a;
+$green: #18c161;
+
+* {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.card {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 1rem;
+}
+
+.form {
+    &__item {
+        height: 100px;
+        position: relative;
+
+        .error-msg {
+            color: red;
+            margin: 4px 0;
+            font-size: .8rem;
+        }
+
+        &__label {
+            margin-bottom: 10px;
+        }
+
+        &__input {
+            width: 100%;
+        }
+    }
+}
+
+.ag-theme-alpine {
+
+    margin-top: 1rem;
+
+    .ag-root-wrapper {
+        border-radius: 10px;
+
+        .ag-header-cell-label,
+        .ag-header-group-cell-label {
+            justify-content: center;
+        }
+
+        .ag-header {
+            background-color: $primary;
+
+            .ag-header-cell-text,
+            .ag-header-group-text {
+                color: #fff;
+                font-weight: 500;
+            }
+
+            .ag-icon {
+                color: #fff !important;
+            }
+
+            .ag-header-cell {
+                padding-left: 3px !important;
+                padding-right: 3px !important;
+            }
+        }
+
+        .ag-cell-wrapper {
+            .tooltip-error {
+                width: 100%;
+            }
+
+            word-break: normal;
+        }
+
+        .ag-cell {
+            border-right: 1px solid #ccc !important;
+            border-bottom: 1px solid #ccc !important;
+            border-left: 1px solid #fff !important;
+            border-top: 1px solid #fff !important;
+        }
+
+        .cell-disable {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .align-right{
+            text-align: right;
+        }
+
+        .align-center{
+            text-align: center;
+        }
+
+        .cell-action{
+            &__btn{
+                padding: 0 .5rem;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+
+            .btn-edit{
+                color: $green;
+            }
+
+            .btn-delete{
+                color: $red;
+            }
+        }
+
+    }
+}
