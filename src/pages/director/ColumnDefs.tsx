@@ -1,11 +1,10 @@
 import { DeleteFilled, EditFilled } from "@ant-design/icons";
-import { ColGroupDef } from "ag-grid-community";
-import { Avatar, Button, Image, Tooltip } from "antd";
+import { Avatar, Tooltip } from "antd";
 import dayjs from "dayjs";
 import React from "react";
-import { DEFAULT_FORMAT_DATE } from "../../utils/constant";
-import { BASE_URL_API } from "../../utils";
 import ImageDefault from "../../assets/images/user-default.png";
+import { BASE_URL_API } from "../../utils";
+import { DEFAULT_FORMAT_DATE } from "../../utils/constant";
 
 export const getColumnDefs = (
   gridRef: React.MutableRefObject<any>,

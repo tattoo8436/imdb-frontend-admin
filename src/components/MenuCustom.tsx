@@ -3,6 +3,7 @@ import { Menu, MenuProps } from "antd";
 import {
   HomeOutlined,
   MailOutlined,
+  SolutionOutlined,
   StarOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
@@ -24,6 +25,11 @@ const MenuCustom = () => {
       key: "/actor",
       label: "Diễn viên",
       icon: <StarOutlined />,
+    },
+    {
+      key: "/director",
+      label: "Đạo diễn",
+      icon: <SolutionOutlined />,
     },
   ];
   const navigate = useNavigate();

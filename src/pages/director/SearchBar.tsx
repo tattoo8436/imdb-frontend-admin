@@ -1,10 +1,10 @@
 import { Button, Input } from "antd";
 import React, { useState } from "react";
-import { ISearchActor } from "../../utils/type";
+import { ISearchDirector } from "../../utils/type";
 
 interface IProps {
-  search: ISearchActor;
-  setSearch: React.Dispatch<React.SetStateAction<ISearchActor>>;
+  search: ISearchDirector;
+  setSearch: React.Dispatch<React.SetStateAction<ISearchDirector>>;
   setIsRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const SearchBar = (props: IProps) => {
@@ -16,7 +16,7 @@ const SearchBar = (props: IProps) => {
     <div className="search-bar">
       <Input
         className="search-bar__input"
-        placeholder="Nhập tên diễn viên"
+        placeholder="Nhập tên đạo diễn"
         value={input}
         onChange={(e) => setInput(e.target.value)}
       />

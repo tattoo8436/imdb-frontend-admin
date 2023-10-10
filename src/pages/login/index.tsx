@@ -26,7 +26,7 @@ const Login = () => {
       console.log(data);
       setLoading(false);
       localStorage.setItem("account", JSON.stringify(data));
-      navigate('/');
+      navigate("/");
       window.location.reload();
     } catch (error: any) {
       console.log(error);
@@ -42,7 +42,7 @@ const Login = () => {
           <VideoCameraOutlined className="login__content__header__icon" />
           <div className="login__content__header__text">The Movie Database</div>
         </div>
-
+        
         <form className="form" onSubmit={hookForm.handleSubmit(onSubmit)}>
           <div className="form__item">
             <div className="form__item__label">Tên đăng nhập</div>

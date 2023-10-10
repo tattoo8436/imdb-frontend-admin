@@ -1,31 +1,31 @@
-import { AgGridReact } from "ag-grid-react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { getColumnDefs } from "./ColumnDefs";
-import { actorApi } from "../../apis/actorApi";
-import SearchBar from "./SearchBar";
-import { IActor, ISearchActor } from "../../utils/type";
-import { getCurrentAccount } from "../../utils";
-import TableFooter from "../../components/TableFooter";
-import ModalDelete from "../../components/ModalDelete";
-import { toast } from "react-toastify";
-import ModalAdd from "./ModalAdd";
-import { Button, Col, Row } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { AgGridReact } from "ag-grid-react";
+import { Button, Col, Row } from "antd";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { DEFAULT_ACTOR } from "../../utils/defaultValue";
+import { toast } from "react-toastify";
+import { directorApi } from "../../apis/directorApi";
+import ModalDelete from "../../components/ModalDelete";
+import TableFooter from "../../components/TableFooter";
+import { getCurrentAccount } from "../../utils";
+import { DEFAULT_DIRECTOR } from "../../utils/defaultValue";
+import { ISearchDirector } from "../../utils/type";
+import { getColumnDefs } from "./ColumnDefs";
+import ModalAdd from "./ModalAdd";
 import ModalEdit from "./ModalEdit";
+import SearchBar from "./SearchBar";
 
-const Actor = () => {
+const Director = () => {
   const gridRef: any = useRef(null);
   const account = getCurrentAccount();
-  const hookFormActor = useForm({
-    defaultValues: DEFAULT_ACTOR,
+  const hookFormDirector = useForm({
+    defaultValues: DEFAULT_DIRECTOR,
     mode: "onChange",
   });
 
-  const [listActors, setListActors] = useState([]);
+  const [listDirectors, setListDirectors] = useState([]);
   const [isRefetch, setIsRefetch] = useState(false);
-  const [search, setSearch] = useState<ISearchActor>({
+  const [search, setSearch] = useState<ISearchDirector>({
     username: account?.username,
     password: account?.password,
     pageIndex: 1,
@@ -37,7 +37,6 @@ const Actor = () => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalEdit, setOpenModalEdit] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [isEdit, setIsEdit] = useState(false);
 
   const defaultColDef: any = useMemo(
     () => ({
@@ -56,16 +55,16 @@ const Actor = () => {
   const columnDefs: any = getColumnDefs(gridRef, setOpenModalDelete, setOpenModalEdit);
 
   useEffect(() => {
-    fetchActor();
+    fetchDirector();
   }, [isRefetch, search]);
 
-  const fetchActor = async () => {
-    setListActors([]);
+  const fetchDirector = async () => {
+    setListDirectors([]);
     try {
-      const { data } = await actorApi.searchActor(search);
+      const { data } = await directorApi.searchDirector(search);
       console.log({ data });
       setTotalRecords(data?.totalRecords);
-      setListActors(data?.listActors);
+      setListDirectors(data?.listDirectors);
     } catch (error) {
       console.log(error);
     }
@@ -101,7 +100,7 @@ const Actor = () => {
     );
     console.log(rowSelected);
     try {
-      const { data } = await actorApi.deleteActor({
+      const { data } = await directorApi.deleteDirector({
         username: search.username,
         password: search.password,
         id: rowSelected.data.id,
@@ -118,8 +117,8 @@ const Actor = () => {
   };
 
   return (
-    <div className="actor">
-      <div className="actor__title">Quản lý diễn viên</div>
+    <div className="director">
+      <div className="director__title">Quản lý đạo diễn</div>
 
       <Row justify="space-between">
         <Col span={4}>
@@ -142,12 +141,12 @@ const Actor = () => {
       </Row>
 
       <div
-        className="ag-theme-alpine actor__table"
+        className="ag-theme-alpine director__table"
         style={{ width: "100%", height: "450px" }}
       >
         <AgGridReact
           ref={gridRef}
-          rowData={listActors}
+          rowData={listDirectors}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           animateRows={true}
@@ -173,7 +172,7 @@ const Actor = () => {
       />
 
       <ModalAdd
-        hookForm={hookFormActor}
+        hookForm={hookFormDirector}
         openModal={openModalAdd}
         setOpenModal={setOpenModalAdd}
         setIsRefetch={setIsRefetch}
@@ -181,8 +180,8 @@ const Actor = () => {
       />
 
       <ModalEdit
-        hookForm={hookFormActor}
-        actor={gridRef?.current?.api?.getSelectedRows()[0]}
+        hookForm={hookFormDirector}
+        director={gridRef?.current?.api?.getSelectedRows()[0]}
         openModal={openModalEdit}
         setOpenModal={setOpenModalEdit}
         setIsRefetch={setIsRefetch}
@@ -192,4 +191,4 @@ const Actor = () => {
   );
 };
 
-export default Actor;
+export default Director;
