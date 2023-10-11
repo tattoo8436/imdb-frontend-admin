@@ -1,8 +1,5 @@
-import {
-  CloseOutlined,
-  UploadOutlined
-} from "@ant-design/icons";
-import { Button, Col, DatePicker, Input, Modal, Row, Tooltip } from "antd";
+import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
+import { Button, Col, DatePicker, Input, Modal, Row, Tooltip, Upload } from "antd";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
@@ -27,15 +24,18 @@ const ModalEdit = (props: IProps) => {
   const { hookForm, director, openModal, setOpenModal, setIsRefetch, account } =
     props;
 
-  const uploadRef: any = useRef(null);
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (director) {
       hookForm.setValue("name", director.name);
       hookForm.setValue("description", director.description);
-      hookForm.setValue("image", director.image);
+      hookForm.setValue(
+        "image",
+        director.image
+          ? [{ id: "1", name: String(director.image).slice(37) }]
+          : []
+      );
       hookForm.setValue(
         "dob",
         director.dob ? dayjs(director.dob, "YYYY-MM-DD") : null
@@ -43,22 +43,17 @@ const ModalEdit = (props: IProps) => {
     }
   }, [openModal]);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e?.target?.files?.item(0);
-    if (file) {
-      hookForm.setValue("image", file);
-    }
-  };
-
   const onSubmit = async (value: IDirector) => {
     setLoading(true);
-    let dataImage = { data: value.image };
+    let dataImage = {
+      data: value.image?.length > 0 ? director.image : null,
+    };
     try {
-      if (value.image && typeof value.image !== "string") {
+      if (value.image.length > 0 && value.image.at(0)?.id !== "1") {
         const formData = new FormData();
         formData.append("username", account?.username);
         formData.append("password", account?.password);
-        formData.append("image", value.image);
+        formData.append("image", value.image.at(0).originFileObj);
         dataImage = await fileApi.uploadImage(formData);
         console.log({ dataImage });
       }
@@ -86,127 +81,111 @@ const ModalEdit = (props: IProps) => {
 
   const onCancel = () => {
     setOpenModal(false);
-    hookForm.reset();
-    hookForm.clearErrors();
+    setTimeout(() => {
+      hookForm.reset();
+      hookForm.clearErrors();
+    }, 100);
   };
 
   return (
     <Modal
-      className="modal modal-add"
+      className="modal modal-edit"
       open={openModal}
       onCancel={onCancel}
       footer={null}
       centered
-      width={900}
+      width={500}
     >
       <form onSubmit={hookForm.handleSubmit(onSubmit)} className="form">
         <div className="modal__header">Sửa đạo diễn</div>
         <div className="modal__content">
           <Row>
-            <Col span={12} className="form__item item-image">
-              <div className="form__item__label">Ảnh</div>
-              <div className="item-image__input">
-                <img
-                  src={
-                    hookForm.watch("image")
-                      ? typeof hookForm.watch("image") === "string"
-                        ? `${BASE_URL_API}/image/${hookForm.watch("image")}`
-                        : URL.createObjectURL(hookForm.watch("image"))
-                      : ImageDefault
-                  }
-                  alt="Ảnh"
-                />
-
-                <Tooltip title="Xoá" arrow>
-                  <CloseOutlined
-                    className={classNames("item-image__input__icon clickable", {
-                      "d-none": hookForm.watch("image") === null,
-                    })}
-                    onClick={() => {
-                      hookForm.setValue("image", null);
-                    }}
-                  />
-                </Tooltip>
+            <Col span={24} className="form__item">
+              <div className="form__item__label">
+                Họ tên <span>*</span>
               </div>
-
-              <input
-                ref={uploadRef}
-                className="d-none"
-                type="file"
-                accept=".jpg,.png,.jpeg"
-                onChange={handleImageUpload}
+              <Controller
+                name="name"
+                control={hookForm.control}
+                rules={{
+                  validate: {
+                    required: (v) =>
+                      v.trim().length > 0 || "Họ tên là bắt buộc",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    placeholder="Nhập họ tên"
+                    className="form__item__input"
+                    status={fieldState.error !== undefined ? "error" : ""}
+                  />
+                )}
               />
-              <Button
-                className="item-image__btn"
-                onClick={() => uploadRef.current?.click()}
-                icon={<UploadOutlined />}
-              >
-                Chọn ảnh
-              </Button>
+              {hookForm.formState.errors.name && (
+                <p className="error-msg">
+                  {hookForm.formState.errors.name.message}
+                </p>
+              )}
             </Col>
 
-            <Col span={12}>
-              <Row>
-                <Col span={24} className="form__item">
-                  <div className="form__item__label">
-                    Họ tên <span>*</span>
-                  </div>
-                  <Controller
-                    name="name"
-                    control={hookForm.control}
-                    rules={{
-                      validate: {
-                        required: (v) =>
-                          v.trim().length > 0 || "Họ tên là bắt buộc",
-                      },
+            <Col span={24} className="form__item item-image">
+              <div className="form__item__label">Ảnh</div>
+              <Controller
+                name="image"
+                control={hookForm.control}
+                render={({ field, fieldState }) => (
+                  <Upload
+                    {...field}
+                    fileList={field.value}
+                    onChange={(e) => {
+                      field.onChange(e.fileList);
                     }}
-                    render={({ field, fieldState }) => (
-                      <Input
-                        {...field}
-                        placeholder="Nhập họ tên"
-                        className="form__item__input"
-                        status={fieldState.error !== undefined ? "error" : ""}
-                      />
-                    )}
-                  />
-                  {hookForm.formState.errors.name && (
-                    <p className="error-msg">
-                      {hookForm.formState.errors.name.message}
-                    </p>
-                  )}
-                </Col>
+                    beforeUpload={() => false}
+                    multiple={false}
+                    accept=".jpg,.png,.jpeg"
+                  >
+                    <Button
+                      className={classNames({
+                        "d-none": hookForm.watch("image")?.length > 0,
+                      })}
+                    >
+                      Chọn ảnh
+                    </Button>
+                  </Upload>
+                )}
+              />
+            </Col>
 
-                <Col span={24} className="form__item form__item--text-area">
-                  <div className="form__item__label">Giới thiệu</div>
-                  <Controller
-                    name="description"
-                    control={hookForm.control}
-                    render={({ field, fieldState }) => (
-                      <Input.TextArea
-                        {...field}
-                        placeholder="Nhập giới thiệu"
-                        className="form__item__input"
-                      />
-                    )}
+            <Col span={24} className="form__item form__item--text-area">
+              <div className="form__item__label">Giới thiệu</div>
+              <Controller
+                name="description"
+                control={hookForm.control}
+                render={({ field, fieldState }) => (
+                  <Input.TextArea
+                    {...field}
+                    placeholder="Nhập giới thiệu"
+                    className="form__item__input"
                   />
-                </Col>
+                )}
+              />
+            </Col>
 
-                <Col span={24} className="form__item">
-                  <div className="form__item__label">Ngày sinh</div>
-                  <Controller
-                    name="dob"
-                    control={hookForm.control}
-                    render={({ field, fieldState }) => (
-                      <DatePicker
-                        {...field}
-                        placeholder="Chọn ngày sinh"
-                        className="form__item__input"
-                        format="DD/MM/YYYY"
-                      />
-                    )}
+            <Col span={24} className="form__item">
+              <div className="form__item__label">Ngày sinh</div>
+              <Controller
+                name="dob"
+                control={hookForm.control}
+                render={({ field, fieldState }) => (
+                  <DatePicker
+                    {...field}
+                    placeholder="Chọn ngày sinh"
+                    className="form__item__input"
+                    format="DD/MM/YYYY"
                   />
-                </Col>
-              </Row>
+                )}
+              />
             </Col>
           </Row>
         </div>

@@ -1,4 +1,4 @@
-.actor{
+.genre{
     &__title{
         font-size: 1.5rem;
         font-weight: 600;
@@ -11,3 +11,5 @@
 
     @import './search-bar';
 }
+
+@import './modal-add';

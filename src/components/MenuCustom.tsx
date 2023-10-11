@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Menu, MenuProps } from "antd";
 import {
+  BarsOutlined,
   HomeOutlined,
   MailOutlined,
   SolutionOutlined,
@@ -30,6 +31,11 @@ const MenuCustom = () => {
       key: "/director",
       label: "Đạo diễn",
       icon: <SolutionOutlined />,
+    },
+    {
+      key: "/genre",
+      label: "Thể loại",
+      icon: <BarsOutlined />,
     },
   ];
   const navigate = useNavigate();

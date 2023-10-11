@@ -5,10 +5,10 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import MenuCustom from "./components/MenuCustom";
 import Login from "./pages/login";
 import Home from "./pages/home";
-import Movie from "./pages/movie";
 import Actor from "./pages/actor";
 import NotFound from "./pages/not-found/NotFound";
 import Director from "./pages/director";
+import Genre from "./pages/genre";
 
 function App() {
   const isLogin = Boolean(localStorage.getItem("account"));
@@ -33,9 +33,10 @@ function App() {
                   <Route path="/" element={<Navigate to="/home" />} />
                   <Route path="/home" element={<Home />} />
                   <Route path="/login" element={<Navigate to="/home" />} />
-                  <Route path="/movie" element={<Movie />} />
+                  {/* <Route path="/movie" element={<Movie />} /> */}
                   <Route path="/actor" element={<Actor />} />
                   <Route path="/director" element={<Director />} />
+                  <Route path="/genre" element={<Genre />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>

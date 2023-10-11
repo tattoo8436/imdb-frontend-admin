@@ -19,8 +19,7 @@ $green: #1da759;
 
 .form {
     &__item {
-        height: 90px;
-        position: relative;
+        margin-bottom: 1rem;
 
         .error-msg {
             color: red;
@@ -40,7 +39,11 @@ $green: #1da759;
     }
 
     &__item--text-area {
-        height: 100px;
+        //height: 100px;
+    }
+
+    .item-image {
+        //height: 65px;
     }
 }
 
@@ -142,6 +145,10 @@ $green: #1da759;
     background-color: #f8f8f8;
 }
 
+.ant-upload-select{
+    display: block !important;
+}
+
 .modal {
     &__header {
         font-size: 1.5rem;
@@ -166,6 +173,14 @@ $green: #1da759;
 
         &__item {
             margin: 0 40px;
+        }
+    }
+}
+
+.modal-add, .modal-edit {
+    .modal {
+        &__content {
+            text-align: left;
         }
     }
 }

@@ -1,31 +1,31 @@
-import { AgGridReact } from "ag-grid-react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { getColumnDefs } from "./ColumnDefs";
-import { actorApi } from "../../apis/actorApi";
-import SearchBar from "./SearchBar";
-import { IActor, ISearchActor } from "../../utils/type";
-import { getCurrentAccount } from "../../utils";
-import TableFooter from "../../components/TableFooter";
-import ModalDelete from "../../components/ModalDelete";
-import { toast } from "react-toastify";
-import ModalAdd from "./ModalAdd";
-import { Button, Col, Row } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { AgGridReact } from "ag-grid-react";
+import { Button, Col, Row } from "antd";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { DEFAULT_ACTOR } from "../../utils/defaultValue";
+import { toast } from "react-toastify";
+import { genreApi } from "../../apis/genreApi";
+import ModalDelete from "../../components/ModalDelete";
+import TableFooter from "../../components/TableFooter";
+import { getCurrentAccount } from "../../utils";
+import { DEFAULT_GENRE } from "../../utils/defaultValue";
+import { ISearchGenre } from "../../utils/type";
+import { getColumnDefs } from "./ColumnDefs";
+import ModalAdd from "./ModalAdd";
 import ModalEdit from "./ModalEdit";
+import SearchBar from "./SearchBar";
 
-const Actor = () => {
+const Genre = () => {
   const gridRef: any = useRef(null);
   const account = getCurrentAccount();
-  const hookFormActor = useForm({
-    defaultValues: DEFAULT_ACTOR,
+  const hookFormGenre = useForm({
+    defaultValues: DEFAULT_GENRE,
     mode: "onChange",
   });
 
-  const [listActors, setListActors] = useState([]);
+  const [listGenres, setListGenres] = useState([]);
   const [isRefetch, setIsRefetch] = useState(false);
-  const [search, setSearch] = useState<ISearchActor>({
+  const [search, setSearch] = useState<ISearchGenre>({
     username: account?.username,
     password: account?.password,
     pageIndex: 1,
@@ -55,16 +55,16 @@ const Actor = () => {
   const columnDefs: any = getColumnDefs(gridRef, setOpenModalDelete, setOpenModalEdit);
 
   useEffect(() => {
-    fetchActor();
+    fetchGenre();
   }, [isRefetch, search]);
 
-  const fetchActor = async () => {
-    setListActors([]);
+  const fetchGenre = async () => {
+    setListGenres([]);
     try {
-      const { data } = await actorApi.searchActor(search);
+      const { data } = await genreApi.searchGenre(search);
       console.log({ data });
       setTotalRecords(data?.totalRecords);
-      setListActors(data?.listActors);
+      setListGenres(data?.listGenres);
     } catch (error) {
       console.log(error);
     }
@@ -100,7 +100,7 @@ const Actor = () => {
     );
     console.log(rowSelected);
     try {
-      const { data } = await actorApi.deleteActor({
+      const { data } = await genreApi.deleteGenre({
         username: search.username,
         password: search.password,
         id: rowSelected.data.id,
@@ -117,8 +117,8 @@ const Actor = () => {
   };
 
   return (
-    <div className="actor">
-      <div className="actor__title">Quản lý diễn viên</div>
+    <div className="genre">
+      <div className="genre__title">Quản lý thể loại</div>
 
       <Row justify="space-between">
         <Col span={4}>
@@ -141,12 +141,12 @@ const Actor = () => {
       </Row>
 
       <div
-        className="ag-theme-alpine actor__table"
+        className="ag-theme-alpine genre__table"
         style={{ width: "100%", height: "450px" }}
       >
         <AgGridReact
           ref={gridRef}
-          rowData={listActors}
+          rowData={listGenres}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           animateRows={true}
@@ -172,7 +172,7 @@ const Actor = () => {
       />
 
       <ModalAdd
-        hookForm={hookFormActor}
+        hookForm={hookFormGenre}
         openModal={openModalAdd}
         setOpenModal={setOpenModalAdd}
         setIsRefetch={setIsRefetch}
@@ -180,8 +180,8 @@ const Actor = () => {
       />
 
       <ModalEdit
-        hookForm={hookFormActor}
-        actor={gridRef?.current?.api?.getSelectedRows()[0]}
+        hookForm={hookFormGenre}
+        genre={gridRef?.current?.api?.getSelectedRows()[0]}
         openModal={openModalEdit}
         setOpenModal={setOpenModalEdit}
         setIsRefetch={setIsRefetch}
@@ -191,4 +191,4 @@ const Actor = () => {
   );
 };
 
-export default Actor;
+export default Genre;

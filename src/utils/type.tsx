@@ -28,7 +28,7 @@ export interface ISearchActor {
 
 export interface IActor {
   id: number | null;
-  image: any;
+  image: Array<any>;
   name: string;
   description: string;
   dob: any;
@@ -46,8 +46,23 @@ export interface ISearchDirector {
 
 export interface IDirector {
   id: number | null;
-  image: any;
+  image: Array<any>;
   name: string;
   description: string;
   dob: any;
+}
+
+export interface ISearchGenre {
+  username: string;
+  password: string;
+  pageIndex: number;
+  pageSize: number;
+  name: string;
+  sortBy?: string | null;
+  orderBy?: string | null;
+}
+
+export interface IGenre {
+  id: number | null;
+  name: string;
 }

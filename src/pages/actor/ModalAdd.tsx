@@ -1,18 +1,12 @@
-import {
-  CloseOutlined,
-  QuestionCircleOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import { Button, Col, DatePicker, Input, Modal, Row, Tooltip } from "antd";
-import React, { useRef, useState } from "react";
-import { IActor } from "../../utils/type";
-import { Controller, UseFormReturn } from "react-hook-form";
-import ImageDefault from "../../assets/images/user-default.png";
+import { Button, Col, DatePicker, Input, Modal, Row, Upload } from "antd";
 import classNames from "classnames";
 import dayjs from "dayjs";
-import { actorApi } from "../../apis/actorApi";
+import React, { useState } from "react";
+import { Controller, UseFormReturn } from "react-hook-form";
 import { toast } from "react-toastify";
+import { actorApi } from "../../apis/actorApi";
 import { fileApi } from "../../apis/fileApi";
+import { IActor } from "../../utils/type";
 
 interface IProps {
   hookForm: UseFormReturn<IActor, any, undefined>;
@@ -25,31 +19,21 @@ interface IProps {
 const ModalAdd = (props: IProps) => {
   const { hookForm, openModal, setOpenModal, setIsRefetch, account } = props;
 
-  const uploadRef: any = useRef(null);
-
   const [loading, setLoading] = useState(false);
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e?.target?.files?.item(0);
-    if (file) {
-      hookForm.setValue("image", file);
-    }
-  };
 
   const onSubmit = async (value: IActor) => {
     console.log(dayjs(value.dob).format("YYYY-MM-DD"));
     setLoading(true);
     let dataImage = null;
     try {
-      if (value.image) {
+      if (value.image.length > 0) {
         const formData = new FormData();
         formData.append("username", account?.username);
         formData.append("password", account?.password);
-        formData.append("image", value.image);
+        formData.append("image", value.image.at(0).originFileObj);
         dataImage = await fileApi.uploadImage(formData);
         console.log({ dataImage });
       }
-
       const payload = {
         username: account?.username,
         password: account?.password,
@@ -72,8 +56,10 @@ const ModalAdd = (props: IProps) => {
 
   const onCancel = () => {
     setOpenModal(false);
-    hookForm.reset();
-    hookForm.clearErrors();
+    setTimeout(() => {
+      hookForm.reset();
+      hookForm.clearErrors();
+    }, 100);
   };
 
   return (
@@ -83,116 +69,98 @@ const ModalAdd = (props: IProps) => {
       onCancel={onCancel}
       footer={null}
       centered
-      width={900}
+      width={500}
     >
       <form onSubmit={hookForm.handleSubmit(onSubmit)} className="form">
         <div className="modal__header">Thêm diễn viên</div>
         <div className="modal__content">
           <Row>
-            <Col span={12} className="form__item item-image">
-              <div className="form__item__label">Ảnh</div>
-              <div className="item-image__input">
-                <img
-                  src={
-                    hookForm.watch("image")
-                      ? typeof hookForm.watch("image") === "string"
-                        ? ""
-                        : URL.createObjectURL(hookForm.watch("image"))
-                      : ImageDefault
-                  }
-                  alt="Ảnh"
-                />
-
-                <Tooltip title="Xoá" arrow>
-                  <CloseOutlined
-                    className={classNames("item-image__input__icon clickable", {
-                      "d-none": hookForm.watch("image") === null,
-                    })}
-                    onClick={() => {
-                      hookForm.setValue("image", null);
-                    }}
-                  />
-                </Tooltip>
+            <Col span={24} className="form__item">
+              <div className="form__item__label">
+                Họ tên <span>*</span>
               </div>
-
-              <input
-                ref={uploadRef}
-                className="d-none"
-                type="file"
-                accept=".jpg,.png,.jpeg"
-                onChange={handleImageUpload}
+              <Controller
+                name="name"
+                control={hookForm.control}
+                rules={{
+                  validate: {
+                    required: (v) =>
+                      v.trim().length > 0 || "Họ tên là bắt buộc",
+                  },
+                }}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    placeholder="Nhập họ tên"
+                    className="form__item__input"
+                    status={fieldState.error !== undefined ? "error" : ""}
+                  />
+                )}
               />
-              <Button
-                className="item-image__btn"
-                onClick={() => uploadRef.current?.click()}
-                icon={<UploadOutlined />}
-              >
-                Chọn ảnh
-              </Button>
+              {hookForm.formState.errors.name && (
+                <p className="error-msg">
+                  {hookForm.formState.errors.name.message}
+                </p>
+              )}
             </Col>
 
-            <Col span={12}>
-              <Row>
-                <Col span={24} className="form__item">
-                  <div className="form__item__label">
-                    Họ tên <span>*</span>
-                  </div>
-                  <Controller
-                    name="name"
-                    control={hookForm.control}
-                    rules={{
-                      validate: {
-                        required: (v) =>
-                          v.trim().length > 0 || "Họ tên là bắt buộc",
-                      },
+            <Col span={24} className="form__item item-image">
+              <div className="form__item__label">Ảnh</div>
+              <Controller
+                name="image"
+                control={hookForm.control}
+                render={({ field, fieldState }) => (
+                  <Upload
+                    {...field}
+                    fileList={field.value}
+                    onChange={(e) => {
+                      field.onChange(e.fileList);
                     }}
-                    render={({ field, fieldState }) => (
-                      <Input
-                        {...field}
-                        placeholder="Nhập họ tên"
-                        className="form__item__input"
-                        status={fieldState.error !== undefined ? "error" : ""}
-                      />
-                    )}
-                  />
-                  {hookForm.formState.errors.name && (
-                    <p className="error-msg">
-                      {hookForm.formState.errors.name.message}
-                    </p>
-                  )}
-                </Col>
+                    beforeUpload={() => false}
+                    multiple={false}
+                    accept=".jpg,.png,.jpeg"
+                  >
+                    <Button
+                      className={classNames({
+                        "d-none": hookForm.watch("image")?.length > 0,
+                      })}
+                    >
+                      Chọn ảnh
+                    </Button>
+                  </Upload>
+                )}
+                />
+            </Col>
 
-                <Col span={24} className="form__item form__item--text-area">
-                  <div className="form__item__label">Giới thiệu</div>
-                  <Controller
-                    name="description"
-                    control={hookForm.control}
-                    render={({ field, fieldState }) => (
-                      <Input.TextArea
-                        {...field}
-                        placeholder="Nhập giới thiệu"
-                        className="form__item__input"
-                      />
-                    )}
+            <Col span={24} className="form__item form__item--text-area">
+              <div className="form__item__label">Giới thiệu</div>
+              <Controller
+                name="description"
+                control={hookForm.control}
+                render={({ field, fieldState }) => (
+                  <Input.TextArea
+                    {...field}
+                    placeholder="Nhập giới thiệu"
+                    className="form__item__input"
                   />
-                </Col>
+                )}
+              />
+            </Col>
 
-                <Col span={24} className="form__item">
-                  <div className="form__item__label">Ngày sinh</div>
-                  <Controller
-                    name="dob"
-                    control={hookForm.control}
-                    render={({ field, fieldState }) => (
-                      <DatePicker
-                        {...field}
-                        placeholder="Chọn ngày sinh"
-                        className="form__item__input"
-                        format="DD/MM/YYYY"
-                      />
-                    )}
+            <Col span={24} className="form__item">
+              <div className="form__item__label">Ngày sinh</div>
+              <Controller
+                name="dob"
+                control={hookForm.control}
+                render={({ field, fieldState }) => (
+                  <DatePicker
+                    {...field}
+                    placeholder="Chọn ngày sinh"
+                    className="form__item__input"
+                    format="DD/MM/YYYY"
                   />
-                </Col>
-              </Row>
+                )}
+              />
             </Col>
           </Row>
         </div>
