@@ -1,9 +1,22 @@
 .search-bar{
-    display: flex;
-    justify-content: flex-end;
+    &__name{
+        display: flex;
+        margin-bottom: 1rem;
 
-    &__input{
-        width: 50%;
-        margin-right: 1rem;
+        &__input{
+            margin: 0 1rem;
+        }
+    }
+
+    &__filter{
+        &__item{
+            &__label{
+                margin-bottom: 4px;
+            }
+
+            &__input{
+                width: 100%;
+            }
+        }
     }
 }

@@ -1,28 +1,44 @@
-import { Button, Col, DatePicker, Input, Modal, Row, Upload } from "antd";
+import { Button, Col, DatePicker, Input, Modal, Row, Select, Upload } from "antd";
 import classNames from "classnames";
 import dayjs from "dayjs";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { toast } from "react-toastify";
-import { directorApi } from "../../apis/directorApi";
+import { episodeApi } from "../../apis/episodeApi";
 import { fileApi } from "../../apis/fileApi";
-import { IDirector } from "../../utils/type";
+import { IEpisode, IOption } from "../../utils/type";
 
 interface IProps {
-  hookForm: UseFormReturn<IDirector, any, undefined>;
+  hookForm: UseFormReturn<IEpisode, any, undefined>;
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIsRefetch: React.Dispatch<React.SetStateAction<boolean>>;
   account: any;
+  listEpisodes: IEpisode[];
+  season: number;
+  movieId: string | null;
 }
 
 const ModalAdd = (props: IProps) => {
-  const { hookForm, openModal, setOpenModal, setIsRefetch, account } = props;
+  const {
+    hookForm,
+    openModal,
+    setOpenModal,
+    setIsRefetch,
+    account,
+    listEpisodes,
+    season,
+    movieId,
+  } = props;
 
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (value: IDirector) => {
-    console.log(dayjs(value.dob).format("YYYY-MM-DD"));
+  useEffect(() => {
+    hookForm.setValue("ep", listEpisodes.length + 1);
+    hookForm.setValue("season", season);
+  }, [openModal]);
+
+  const onSubmit = async (value: IEpisode) => {
     setLoading(true);
     let dataImage = null;
     try {
@@ -39,12 +55,17 @@ const ModalAdd = (props: IProps) => {
           username: account?.username,
           password: account?.password,
         },
+        movieId: movieId,
+        season: value.season,
         name: value.name,
         description: value.description,
         image: dataImage?.data ?? null,
-        dob: value.dob ? dayjs(value.dob).format("YYYY-MM-DD") : null,
+        releaseDate: value.releaseDate
+          ? dayjs(value.releaseDate).format("YYYY-MM-DD")
+          : null,
+        duration: value.duration,
       };
-      const { data } = await directorApi.addDirector(payload);
+      const { data } = await episodeApi.addEpisode(payload);
       console.log({ data });
       setIsRefetch((pre) => !pre);
       setLoading(false);
@@ -71,29 +92,54 @@ const ModalAdd = (props: IProps) => {
       onCancel={onCancel}
       footer={null}
       centered
-      width={500}
+      width={1000}
     >
       <form onSubmit={hookForm.handleSubmit(onSubmit)} className="form">
-        <div className="modal__header">Thêm đạo diễn</div>
+        <div className="modal__header">Thêm tập phim</div>
         <div className="modal__content">
-          <Row>
-            <Col span={24} className="form__item">
+          <Row gutter={24}>
+            <Col span={12} className="form__item">
               <div className="form__item__label">
-                Họ tên <span>*</span>
+                Tập <span>*</span>
+              </div>
+              <Controller
+                name="ep"
+                control={hookForm.control}
+                render={({ field }) => (
+                  <Input {...field} disabled className="form__item__input" />
+                )}
+              />
+            </Col>
+
+            <Col span={12} className="form__item">
+              <div className="form__item__label">
+                Mùa <span>*</span>
+              </div>
+              <Controller
+                name="season"
+                control={hookForm.control}
+                render={({ field }) => (
+                  <Input {...field} disabled className="form__item__input" />
+                )}
+              />
+            </Col>
+
+            <Col span={12} className="form__item">
+              <div className="form__item__label">
+                Tên <span>*</span>
               </div>
               <Controller
                 name="name"
                 control={hookForm.control}
                 rules={{
                   validate: {
-                    required: (v) =>
-                      v.trim().length > 0 || "Họ tên là bắt buộc",
+                    required: (v) => v.trim().length > 0 || "Tên là bắt buộc",
                   },
                 }}
                 render={({ field, fieldState }) => (
                   <Input
                     {...field}
-                    placeholder="Nhập họ tên"
+                    placeholder="Nhập tên"
                     className="form__item__input"
                     status={fieldState.error !== undefined ? "error" : ""}
                   />
@@ -106,7 +152,7 @@ const ModalAdd = (props: IProps) => {
               )}
             </Col>
 
-            <Col span={24} className="form__item item-image">
+            <Col span={12} className="form__item item-image">
               <div className="form__item__label">Ảnh</div>
               <Controller
                 name="image"
@@ -135,7 +181,7 @@ const ModalAdd = (props: IProps) => {
             </Col>
 
             <Col span={24} className="form__item form__item--text-area">
-              <div className="form__item__label">Giới thiệu</div>
+              <div className="form__item__label">Nội dung</div>
               <Controller
                 name="description"
                 control={hookForm.control}
@@ -149,17 +195,33 @@ const ModalAdd = (props: IProps) => {
               />
             </Col>
 
-            <Col span={24} className="form__item">
-              <div className="form__item__label">Ngày sinh</div>
+            <Col span={12} className="form__item">
+              <div className="form__item__label">Ngày phát hành</div>
               <Controller
-                name="dob"
+                name="releaseDate"
                 control={hookForm.control}
                 render={({ field, fieldState }) => (
                   <DatePicker
                     {...field}
-                    placeholder="Chọn ngày sinh"
+                    placeholder="Chọn ngày phát hành"
                     className="form__item__input"
                     format="DD/MM/YYYY"
+                  />
+                )}
+              />
+            </Col>
+
+            <Col span={12} className="form__item">
+              <div className="form__item__label">Thời lượng (phút)</div>
+              <Controller
+                name="duration"
+                control={hookForm.control}
+                render={({ field, fieldState }) => (
+                  <Input
+                    {...field}
+                    placeholder="Nhập thời lượng"
+                    className="form__item__input"
+                    type="number"
                   />
                 )}
               />

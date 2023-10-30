@@ -26,8 +26,10 @@ const Director = () => {
   const [listDirectors, setListDirectors] = useState([]);
   const [isRefetch, setIsRefetch] = useState(false);
   const [search, setSearch] = useState<ISearchDirector>({
-    username: account?.username,
-    password: account?.password,
+    accountAdmin: {
+      username: account?.username,
+      password: account?.password,
+    },
     pageIndex: 1,
     pageSize: 10,
     name: "",
@@ -52,7 +54,11 @@ const Director = () => {
     []
   );
 
-  const columnDefs: any = getColumnDefs(gridRef, setOpenModalDelete, setOpenModalEdit);
+  const columnDefs: any = getColumnDefs(
+    gridRef,
+    setOpenModalDelete,
+    setOpenModalEdit
+  );
 
   useEffect(() => {
     fetchDirector();
@@ -98,13 +104,15 @@ const Director = () => {
     const rowSelected = gridRef?.current?.api?.getDisplayedRowAtIndex(
       gridRef?.current?.api?.getFocusedCell().rowIndex
     );
-    console.log(rowSelected);
+    const payload = {
+      accountAdmin: {
+        username: search.accountAdmin?.username,
+        password: search.accountAdmin?.password,
+      },
+      id: rowSelected.data.id,
+    }
     try {
-      const { data } = await directorApi.deleteDirector({
-        username: search.username,
-        password: search.password,
-        id: rowSelected.data.id,
-      });
+      const { data } = await directorApi.deleteDirector(payload);
       console.log({ data });
       setLoading(false);
       setOpenModalDelete(false);

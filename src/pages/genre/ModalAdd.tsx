@@ -1,19 +1,9 @@
-import {
-  CloseOutlined,
-  QuestionCircleOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
-import { Button, Col, DatePicker, Input, Modal, Row, Tooltip } from "antd";
-import React, { useRef, useState } from "react";
-import { IActor, IGenre } from "../../utils/type";
+import { Button, Col, Input, Modal, Row } from "antd";
+import React, { useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
-import ImageDefault from "../../assets/images/user-default.png";
-import classNames from "classnames";
-import dayjs from "dayjs";
-import { actorApi } from "../../apis/actorApi";
 import { toast } from "react-toastify";
-import { fileApi } from "../../apis/fileApi";
 import { genreApi } from "../../apis/genreApi";
+import { IGenre } from "../../utils/type";
 
 interface IProps {
   hookForm: UseFormReturn<IGenre, any, undefined>;
@@ -31,8 +21,10 @@ const ModalAdd = (props: IProps) => {
   const onSubmit = async (value: IGenre) => {
     setLoading(true);
     const payload = {
-      username: account?.username,
-      password: account?.password,
+      accountAdmin: {
+        username: account?.username,
+        password: account?.password,
+      },
       name: value.name,
     };
     try {

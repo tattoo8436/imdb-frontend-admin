@@ -26,7 +26,7 @@ const ModalAdd = (props: IProps) => {
     setLoading(true);
     let dataImage = null;
     try {
-      if (value.image.length > 0) {
+      if (value?.image && value.image.length > 0) {
         const formData = new FormData();
         formData.append("username", account?.username);
         formData.append("password", account?.password);
@@ -35,8 +35,10 @@ const ModalAdd = (props: IProps) => {
         console.log({ dataImage });
       }
       const payload = {
-        username: account?.username,
-        password: account?.password,
+        accountAdmin: {
+          username: account?.username,
+          password: account?.password,
+        },
         name: value.name,
         description: value.description,
         image: dataImage?.data ?? null,
@@ -85,7 +87,7 @@ const ModalAdd = (props: IProps) => {
                 rules={{
                   validate: {
                     required: (v) =>
-                      v.trim().length > 0 || "Họ tên là bắt buộc",
+                      (v && v.trim().length > 0) || "Họ tên là bắt buộc",
                   },
                 }}
                 render={({ field, fieldState }) => (
@@ -129,7 +131,7 @@ const ModalAdd = (props: IProps) => {
                     </Button>
                   </Upload>
                 )}
-                />
+              />
             </Col>
 
             <Col span={24} className="form__item form__item--text-area">

@@ -1,10 +1,10 @@
 import { Button, Input } from "antd";
 import React, { useState } from "react";
-import { ISearchActor } from "../../utils/type";
+import { ISearchActor, ISearchGenre } from "../../utils/type";
 
 interface IProps {
   search: ISearchActor;
-  setSearch: React.Dispatch<React.SetStateAction<ISearchActor>>;
+  setSearch: React.Dispatch<React.SetStateAction<ISearchGenre>>;
   setIsRefetch: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const SearchBar = (props: IProps) => {

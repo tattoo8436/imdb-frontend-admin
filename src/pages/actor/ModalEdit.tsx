@@ -53,8 +53,10 @@ const ModalEdit = (props: IProps) => {
         console.log({ dataImage });
       }
       const payload = {
-        username: account?.username,
-        password: account?.password,
+        accountAdmin: {
+          username: account?.username,
+          password: account?.password,
+        },
         id: actor?.id,
         name: value.name,
         description: value.description,

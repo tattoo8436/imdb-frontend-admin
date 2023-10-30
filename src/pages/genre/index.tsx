@@ -26,8 +26,10 @@ const Genre = () => {
   const [listGenres, setListGenres] = useState([]);
   const [isRefetch, setIsRefetch] = useState(false);
   const [search, setSearch] = useState<ISearchGenre>({
-    username: account?.username,
-    password: account?.password,
+    accountAdmin: {
+      username: account?.username,
+      password: account?.password,
+    },
     pageIndex: 1,
     pageSize: 10,
     name: "",
@@ -52,7 +54,11 @@ const Genre = () => {
     []
   );
 
-  const columnDefs: any = getColumnDefs(gridRef, setOpenModalDelete, setOpenModalEdit);
+  const columnDefs: any = getColumnDefs(
+    gridRef,
+    setOpenModalDelete,
+    setOpenModalEdit
+  );
 
   useEffect(() => {
     fetchGenre();
@@ -101,8 +107,10 @@ const Genre = () => {
     console.log(rowSelected);
     try {
       const { data } = await genreApi.deleteGenre({
-        username: search.username,
-        password: search.password,
+        accountAdmin: {
+          username: account?.username,
+          password: account?.password,
+        },
         id: rowSelected.data.id,
       });
       console.log({ data });

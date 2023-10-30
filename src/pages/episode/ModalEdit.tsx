@@ -1,32 +1,75 @@
-import { Button, Col, DatePicker, Input, Modal, Row, Upload } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Upload,
+} from "antd";
 import classNames from "classnames";
 import dayjs from "dayjs";
-import React, { useState } from "react";
-import { Controller, UseFormReturn } from "react-hook-form";
+import React, { useEffect, useState } from "react";
+import {
+  Controller,
+  UseFormReturn
+} from "react-hook-form";
 import { toast } from "react-toastify";
-import { directorApi } from "../../apis/directorApi";
+import { episodeApi } from "../../apis/episodeApi";
 import { fileApi } from "../../apis/fileApi";
-import { IDirector } from "../../utils/type";
+import { IEpisode, IOption } from "../../utils/type";
 
 interface IProps {
-  hookForm: UseFormReturn<IDirector, any, undefined>;
+  hookForm: UseFormReturn<IEpisode, any, undefined>;
+  episode: IEpisode;
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   setIsRefetch: React.Dispatch<React.SetStateAction<boolean>>;
   account: any;
+  movieId: string | null;
 }
 
-const ModalAdd = (props: IProps) => {
-  const { hookForm, openModal, setOpenModal, setIsRefetch, account } = props;
+const ModalEdit = (props: IProps) => {
+  const {
+    hookForm,
+    episode,
+    openModal,
+    setOpenModal,
+    setIsRefetch,
+    account,
+    movieId,
+  } = props;
 
   const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (value: IDirector) => {
-    console.log(dayjs(value.dob).format("YYYY-MM-DD"));
+  useEffect(() => {
+    if (episode) {
+      hookForm.setValue("ep", episode.ep);
+      hookForm.setValue("season", episode.season);
+      hookForm.setValue("name", episode.name);
+      hookForm.setValue("description", episode.description);
+      hookForm.setValue(
+        "image",
+        episode.image
+          ? [{ id: "1", name: String(episode.image).slice(37) }]
+          : []
+      );
+      hookForm.setValue(
+        "releaseDate",
+        episode.releaseDate ? dayjs(episode.releaseDate, "YYYY-MM-DD") : null
+      );
+      hookForm.setValue("duration", episode.duration);
+    }
+  }, [openModal]);
+
+  const onSubmit = async (value: IEpisode) => {
     setLoading(true);
-    let dataImage = null;
+    let dataImage = {
+      data: value.image?.length > 0 ? episode.image : null,
+    };
     try {
-      if (value.image.length > 0) {
+      if (value.image.length > 0 && value.image.at(0)?.id !== "1") {
         const formData = new FormData();
         formData.append("username", account?.username);
         formData.append("password", account?.password);
@@ -39,17 +82,21 @@ const ModalAdd = (props: IProps) => {
           username: account?.username,
           password: account?.password,
         },
+        id: episode.id,
         name: value.name,
         description: value.description,
         image: dataImage?.data ?? null,
-        dob: value.dob ? dayjs(value.dob).format("YYYY-MM-DD") : null,
+        releaseDate: value.releaseDate
+          ? dayjs(value.releaseDate).format("YYYY-MM-DD")
+          : null,
+        duration: value.duration,
       };
-      const { data } = await directorApi.addDirector(payload);
+      const { data } = await episodeApi.editEpisode(payload);
       console.log({ data });
       setIsRefetch((pre) => !pre);
       setLoading(false);
       onCancel();
-      toast.success("Thêm thành công!", { autoClose: 3000 });
+      toast.success("Sửa thành công!", { autoClose: 3000 });
     } catch (error) {
       console.log(error);
       setLoading(false);
@@ -66,34 +113,59 @@ const ModalAdd = (props: IProps) => {
 
   return (
     <Modal
-      className="modal modal-add"
+      className="modal modal-edit"
       open={openModal}
       onCancel={onCancel}
       footer={null}
       centered
-      width={500}
+      width={1000}
     >
       <form onSubmit={hookForm.handleSubmit(onSubmit)} className="form">
-        <div className="modal__header">Thêm đạo diễn</div>
+        <div className="modal__header">Sửa tập phim</div>
         <div className="modal__content">
-          <Row>
-            <Col span={24} className="form__item">
+        <Row gutter={24}>
+            <Col span={12} className="form__item">
               <div className="form__item__label">
-                Họ tên <span>*</span>
+                Tập <span>*</span>
+              </div>
+              <Controller
+                name="ep"
+                control={hookForm.control}
+                render={({ field }) => (
+                  <Input {...field} disabled className="form__item__input" />
+                )}
+              />
+            </Col>
+
+            <Col span={12} className="form__item">
+              <div className="form__item__label">
+                Mùa <span>*</span>
+              </div>
+              <Controller
+                name="season"
+                control={hookForm.control}
+                render={({ field }) => (
+                  <Input {...field} disabled className="form__item__input" />
+                )}
+              />
+            </Col>
+
+            <Col span={12} className="form__item">
+              <div className="form__item__label">
+                Tên <span>*</span>
               </div>
               <Controller
                 name="name"
                 control={hookForm.control}
                 rules={{
                   validate: {
-                    required: (v) =>
-                      v.trim().length > 0 || "Họ tên là bắt buộc",
+                    required: (v) => v.trim().length > 0 || "Tên là bắt buộc",
                   },
                 }}
                 render={({ field, fieldState }) => (
                   <Input
                     {...field}
-                    placeholder="Nhập họ tên"
+                    placeholder="Nhập tên"
                     className="form__item__input"
                     status={fieldState.error !== undefined ? "error" : ""}
                   />
@@ -106,12 +178,12 @@ const ModalAdd = (props: IProps) => {
               )}
             </Col>
 
-            <Col span={24} className="form__item item-image">
+            <Col span={12} className="form__item item-image">
               <div className="form__item__label">Ảnh</div>
               <Controller
                 name="image"
                 control={hookForm.control}
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <Upload
                     {...field}
                     fileList={field.value}
@@ -135,11 +207,11 @@ const ModalAdd = (props: IProps) => {
             </Col>
 
             <Col span={24} className="form__item form__item--text-area">
-              <div className="form__item__label">Giới thiệu</div>
+              <div className="form__item__label">Nội dung</div>
               <Controller
                 name="description"
                 control={hookForm.control}
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <Input.TextArea
                     {...field}
                     placeholder="Nhập giới thiệu"
@@ -149,17 +221,33 @@ const ModalAdd = (props: IProps) => {
               />
             </Col>
 
-            <Col span={24} className="form__item">
-              <div className="form__item__label">Ngày sinh</div>
+            <Col span={12} className="form__item">
+              <div className="form__item__label">Ngày phát hành</div>
               <Controller
-                name="dob"
+                name="releaseDate"
                 control={hookForm.control}
-                render={({ field, fieldState }) => (
+                render={({ field }) => (
                   <DatePicker
                     {...field}
-                    placeholder="Chọn ngày sinh"
+                    placeholder="Chọn ngày phát hành"
                     className="form__item__input"
                     format="DD/MM/YYYY"
+                  />
+                )}
+              />
+            </Col>
+
+            <Col span={12} className="form__item">
+              <div className="form__item__label">Thời lượng (phút)</div>
+              <Controller
+                name="duration"
+                control={hookForm.control}
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    placeholder="Nhập thời lượng"
+                    className="form__item__input"
+                    type="number"
                   />
                 )}
               />
@@ -187,4 +275,4 @@ const ModalAdd = (props: IProps) => {
   );
 };
 
-export default ModalAdd;
+export default ModalEdit;

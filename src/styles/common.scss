@@ -102,6 +102,10 @@ $green: #1da759;
             height: 80px;
             margin: 0.5rem;
             border: 1px solid $divider;
+
+            &__movie {
+                height: 110px;
+            }
         }
 
         .cell-disable {
@@ -115,6 +119,10 @@ $green: #1da759;
 
         .align-center {
             text-align: center;
+        }
+
+        .cell-action-wrapper{
+            padding: 0;
         }
 
         .cell-action {
@@ -135,6 +143,46 @@ $green: #1da759;
             .btn-delete {
                 color: $red;
             }
+
+            .btn-common{
+                color: $primary;
+            }
+        }
+
+        .cell-tag {
+            padding: .5rem 0;
+
+            .ant-col {
+                line-height: normal;
+            }
+
+            &__item {
+                color: $primary;
+                padding: 2px 6px !important;
+                border: 1px solid $divider;
+                border-radius: 10px;
+                font-size: .8rem;
+                font-weight: 600;
+
+                &__image {
+                    width: 24px;
+                    height: 24px;
+                    margin-right: 0.5rem;
+                    border: 1px solid $divider;
+                }
+
+                &__text {
+                    &__normal {
+                        font-weight: normal;
+                    }
+                }
+            }
+
+            .item-person {
+                display: flex;
+                align-items: center;
+                width: fit-content;
+            }
         }
 
     }
@@ -145,7 +193,7 @@ $green: #1da759;
     background-color: #f8f8f8;
 }
 
-.ant-upload-select{
+.ant-upload-select {
     display: block !important;
 }
 
@@ -177,7 +225,8 @@ $green: #1da759;
     }
 }
 
-.modal-add, .modal-edit {
+.modal-add,
+.modal-edit {
     .modal {
         &__content {
             text-align: left;
@@ -187,4 +236,16 @@ $green: #1da759;
 
 .d-none {
     display: none;
+}
+
+.option-person {
+    display: flex;
+    align-items: center;
+
+    &__image {
+        margin-right: 0.5rem;
+        width: 24px;
+        height: 24px;
+        border: 1px solid $divider;
+    }
 }

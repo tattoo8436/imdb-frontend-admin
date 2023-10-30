@@ -42,8 +42,10 @@ const ModalEdit = (props: IProps) => {
   const onSubmit = async (value: IGenre) => {
     setLoading(true);
     const payload = {
-      username: account?.username,
-      password: account?.password,
+      accountAdmin: {
+        username: account?.username,
+        password: account?.password,
+      },
       id: genre?.id,
       name: value.name,
     };

@@ -1,14 +1,11 @@
-import { CloseOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Input, Modal, Row, Tooltip, Upload } from "antd";
+import { Button, Col, DatePicker, Input, Modal, Row, Upload } from "antd";
 import classNames from "classnames";
 import dayjs from "dayjs";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { toast } from "react-toastify";
 import { directorApi } from "../../apis/directorApi";
 import { fileApi } from "../../apis/fileApi";
-import ImageDefault from "../../assets/images/user-default.png";
-import { BASE_URL_API } from "../../utils";
 import { IDirector } from "../../utils/type";
 
 interface IProps {
@@ -59,8 +56,10 @@ const ModalEdit = (props: IProps) => {
       }
 
       const payload = {
-        username: account?.username,
-        password: account?.password,
+        accountAdmin: {
+          username: account?.username,
+          password: account?.password,
+        },
         id: director?.id,
         name: value.name,
         description: value.description,

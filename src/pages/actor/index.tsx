@@ -26,8 +26,10 @@ const Actor = () => {
   const [listActors, setListActors] = useState([]);
   const [isRefetch, setIsRefetch] = useState(false);
   const [search, setSearch] = useState<ISearchActor>({
-    username: account?.username,
-    password: account?.password,
+    accountAdmin: {
+      username: account?.username,
+      password: account?.password,
+    },
     pageIndex: 1,
     pageSize: 10,
     name: "",
@@ -99,12 +101,15 @@ const Actor = () => {
       gridRef?.current?.api?.getFocusedCell().rowIndex
     );
     console.log(rowSelected);
+    const payload = {
+      accountAdmin: {
+        username: search.accountAdmin?.username,
+        password: search.accountAdmin?.password,
+      },
+      id: rowSelected.data.id,
+    }
     try {
-      const { data } = await actorApi.deleteActor({
-        username: search.username,
-        password: search.password,
-        id: rowSelected.data.id,
-      });
+      const { data } = await actorApi.deleteActor(payload);
       console.log({ data });
       setLoading(false);
       setOpenModalDelete(false);
