@@ -1,19 +1,21 @@
 import { Tabs, TabsProps } from "antd";
-import Header from "../../components/Header";
-import Actor from "../actor";
-import Movie from "../movie";
+import NumberVote from "./NumberVote";
 
 const Home = () => {
-
+  const items: TabsProps["items"] = [
+    {
+      key: "1",
+      label: "Số lượng đánh giá",
+      children: <NumberVote />,
+    },
+  ];
 
   return (
     <div className="home">
+      <div className="home__title">Thống kê phim</div>
 
       <div className="home__content">
-        <div className="home__content__title">Trang quản lý</div>
-
-        <div className="home__content__card card">
-        </div>
+        <Tabs items={items} defaultActiveKey="1" />
       </div>
     </div>
   );

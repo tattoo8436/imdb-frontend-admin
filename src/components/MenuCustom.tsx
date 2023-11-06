@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from "react";
-import { Menu, MenuProps } from "antd";
 import {
   BarsOutlined,
-  HomeOutlined,
-  MailOutlined,
   SolutionOutlined,
   StarOutlined,
+  StockOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
+import { Menu } from "antd";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const MenuCustom = () => {
   const itemPages = [
     {
       key: "/home",
-      label: "Trang chủ",
-      icon: <HomeOutlined />,
+      label: "Thống kê",
+      icon: <StockOutlined />,
     },
     {
       key: "/movie",

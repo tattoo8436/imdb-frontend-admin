@@ -21,4 +21,7 @@ export const movieApi = {
   addSeason: (payload: any) => {
     return axios.post(`${BASE_URL_API}/movie/add-season`, payload);
   },
+  getStatisticMovie: (id: any) => {
+    return axios.get(`${BASE_URL_API}/rating/movie/statistic?movieId=${id}`);
+  },
 };

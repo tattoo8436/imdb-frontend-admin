@@ -96,7 +96,6 @@ export interface ISearchMovie {
   name: string;
   type: number | null;
   genreId: number | null;
-  actorId: number | null;
   score: number | null;
   releaseDate: number | string | null;
   language: string | null;
@@ -135,7 +134,7 @@ export interface IMovie {
   listEpisode?: Array<any>;
 }
 
-export interface IEpisode{
+export interface IEpisode {
   id: number | null;
   ep: number;
   season: number;
@@ -148,4 +147,10 @@ export interface IEpisode{
   score: number;
   listMovieActorIds?: number[];
   listMovieActorEpisodes?: any[];
+}
+
+export interface IMovieStatistic {
+  id: number;
+  name: string;
+  listNumberVotes: number[];
 }

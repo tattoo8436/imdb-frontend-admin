@@ -5,6 +5,7 @@ $divider: #DEDDE0;
 
 $red: #da1e3a;
 $green: #1da759;
+$yellow: #e8cf31;
 
 * {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -121,7 +122,7 @@ $green: #1da759;
             text-align: center;
         }
 
-        .cell-action-wrapper{
+        .cell-action-wrapper {
             padding: 0;
         }
 
@@ -144,7 +145,7 @@ $green: #1da759;
                 color: $red;
             }
 
-            .btn-common{
+            .btn-common {
                 color: $primary;
             }
         }
