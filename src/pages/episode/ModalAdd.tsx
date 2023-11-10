@@ -1,4 +1,13 @@
-import { Button, Col, DatePicker, Input, Modal, Row, Select, Upload } from "antd";
+import {
+  Button,
+  Col,
+  DatePicker,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Upload,
+} from "antd";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
@@ -242,7 +251,12 @@ const ModalAdd = (props: IProps) => {
           >
             Lưu
           </Button>
-          <Button onClick={() => console.log(hookForm.getValues())}>Log</Button>
+          <Button
+            className="d-none"
+            onClick={() => console.log(hookForm.getValues())}
+          >
+            Log
+          </Button>
         </div>
       </form>
     </Modal>

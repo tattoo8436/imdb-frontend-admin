@@ -43,7 +43,7 @@ const Actor = () => {
   const defaultColDef: any = useMemo(
     () => ({
       sortable: true,
-      resizable: false,
+      resizable: true,
       editable: false,
       flex: 1,
       suppressMenu: true,
@@ -54,7 +54,11 @@ const Actor = () => {
     []
   );
 
-  const columnDefs: any = getColumnDefs(gridRef, setOpenModalDelete, setOpenModalEdit);
+  const columnDefs: any = getColumnDefs(
+    gridRef,
+    setOpenModalDelete,
+    setOpenModalEdit
+  );
 
   useEffect(() => {
     fetchActor();
@@ -107,7 +111,7 @@ const Actor = () => {
         password: search.accountAdmin?.password,
       },
       id: rowSelected.data.id,
-    }
+    };
     try {
       const { data } = await actorApi.deleteActor(payload);
       console.log({ data });
@@ -167,6 +171,7 @@ const Actor = () => {
         pageSize={search.pageSize}
         totalRecords={totalRecords}
         setSearch={setSearch}
+        setIsRefetch={setIsRefetch}
       />
 
       <ModalDelete

@@ -34,11 +34,10 @@ export const getColumnDefs = (
       cellRenderer: (e: any) => {
         return (
           <Avatar
-            src={e.value ? `${BASE_URL_API}/image/${e.value}` : ImageDefault }
+            src={e.value ? `${BASE_URL_API}/image/${e.value}` : ImageDefault}
             alt="Ảnh"
             className="cell-image"
             //style={{width: '80px', height: '80px', border: '1px solid black'}}
-            
           />
         );
       },
@@ -49,7 +48,11 @@ export const getColumnDefs = (
       minWidth: 150,
       flex: 0.3,
       cellRenderer: (e: any) => {
-        return e.value ?? "";
+        return (
+          <Tooltip title={e.value ?? ""} arrow>
+            <div>{e.value ?? ""}</div>
+          </Tooltip>
+        );
       },
     },
     {
@@ -57,7 +60,11 @@ export const getColumnDefs = (
       headerName: "Giới thiệu",
       minWidth: 200,
       cellRenderer: (e: any) => {
-        return e.value ?? "";
+        return (
+          <Tooltip title={e.value ?? ""} arrow>
+            <div>{e.value ?? ""}</div>
+          </Tooltip>
+        );
       },
     },
     {

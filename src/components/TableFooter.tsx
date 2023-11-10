@@ -7,10 +7,11 @@ interface IProps {
   pageSize: number;
   totalRecords: number;
   setSearch: any;
+  setIsRefetch: any;
 }
 
 const TableFooter = (props: IProps) => {
-  const { pageIndex, pageSize, totalRecords, setSearch } = props;  
+  const { pageIndex, pageSize, totalRecords, setSearch, setIsRefetch } = props;
 
   return (
     <div className="table-footer">
@@ -29,7 +30,10 @@ const TableFooter = (props: IProps) => {
           current={pageIndex}
           total={totalRecords}
           pageSize={pageSize}
-          onChange={(e) => setSearch((pre: any) => ({ ...pre, pageIndex: e }))}
+          onChange={(e) => {
+            setSearch((pre: any) => ({ ...pre, pageIndex: e }));
+            setIsRefetch((pre: any) => !pre);
+          }}
         />
       </div>
     </div>

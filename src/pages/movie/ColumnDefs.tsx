@@ -39,7 +39,7 @@ export const getColumnDefs = (
       cellClass: "align-center",
       cellRenderer: (e: any) => {
         return (
-          <Image
+          <img
             src={e.value ? `${BASE_URL_API}/image/${e.value}` : ImageDefault}
             alt="Ảnh"
             className="cell-image cell-image__movie"
@@ -52,8 +52,14 @@ export const getColumnDefs = (
       headerName: "Tên",
       minWidth: 150,
       flex: 0.3,
+      wrapText: true,
+      autoHeight: true,
       cellRenderer: (e: any) => {
-        return e.value ?? "";
+        return (
+          <Tooltip title={e.value ?? ""} arrow>
+            <div>{e.value ?? ""}</div>
+          </Tooltip>
+        );
       },
     },
     {
@@ -70,7 +76,11 @@ export const getColumnDefs = (
       headerName: "Nội dung",
       minWidth: 200,
       cellRenderer: (e: any) => {
-        return e.value ?? "";
+        return (
+          <Tooltip title={e.value ?? ""} arrow>
+            <div>{e.value ?? ""}</div>
+          </Tooltip>
+        );
       },
     },
     {

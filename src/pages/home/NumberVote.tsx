@@ -27,6 +27,7 @@ const NumberVote = () => {
         type: null,
         genreId: null,
         score: null,
+        numberVote: 1,
         releaseDate: null,
         language: null,
         sortBy: "numberVote",
@@ -57,7 +58,7 @@ const NumberVote = () => {
         {listMovies?.map((movie: IMovie, index) => (
           <Col span={24} key={movie.id}>
             <div
-              className="movie-item card"
+              className="movie-item card-hover"
               onClick={() => handleOpenModalNumberVote(movie)}
             >
               <Badge.Ribbon text={`Hạng ${index + 1}`}>

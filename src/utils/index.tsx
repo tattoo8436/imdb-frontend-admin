@@ -5,7 +5,7 @@ export const getCurrentAccount: any = () => {
 export const BASE_URL_API = "http://localhost:8080/api";
 
 export const validateFileSize = (file: File | null) => {
-  if(file === null){
+  if (file === null) {
     return true;
   }
   if (file.size > 1024 * 1024 * 10) {
@@ -13,3 +13,19 @@ export const validateFileSize = (file: File | null) => {
   }
   return true;
 };
+
+export const filterOption = (input: any, option: any) =>
+  option?.label
+    ?.normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+    .includes(
+      input
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/Đ/g, "D")
+        .toLowerCase()
+    );

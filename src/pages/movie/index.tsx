@@ -57,7 +57,7 @@ const Movie = () => {
   const defaultColDef: any = useMemo(
     () => ({
       sortable: true,
-      resizable: false,
+      resizable: true,
       editable: false,
       flex: 1,
       suppressMenu: true,
@@ -145,6 +145,7 @@ const Movie = () => {
             </div>
           ),
           value: i.id,
+          labelText: i.name,
         }))
       );
     } catch (error) {
@@ -178,6 +179,7 @@ const Movie = () => {
             </div>
           ),
           value: i.id,
+          labelText: i.name,
         }))
       );
     } catch (error) {
@@ -278,6 +280,7 @@ const Movie = () => {
         pageSize={search.pageSize}
         totalRecords={totalRecords}
         setSearch={setSearch}
+        setIsRefetch={setIsRefetch}
       />
 
       <ModalDelete

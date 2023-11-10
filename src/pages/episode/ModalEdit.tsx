@@ -11,10 +11,7 @@ import {
 import classNames from "classnames";
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
-import {
-  Controller,
-  UseFormReturn
-} from "react-hook-form";
+import { Controller, UseFormReturn } from "react-hook-form";
 import { toast } from "react-toastify";
 import { episodeApi } from "../../apis/episodeApi";
 import { fileApi } from "../../apis/fileApi";
@@ -123,7 +120,7 @@ const ModalEdit = (props: IProps) => {
       <form onSubmit={hookForm.handleSubmit(onSubmit)} className="form">
         <div className="modal__header">Sửa tập phim</div>
         <div className="modal__content">
-        <Row gutter={24}>
+          <Row gutter={24}>
             <Col span={12} className="form__item">
               <div className="form__item__label">
                 Tập <span>*</span>
@@ -268,7 +265,12 @@ const ModalEdit = (props: IProps) => {
           >
             Lưu
           </Button>
-          <Button onClick={() => console.log(hookForm.getValues())}>Log</Button>
+          <Button
+            className="d-none"
+            onClick={() => console.log(hookForm.getValues())}
+          >
+            Log
+          </Button>
         </div>
       </form>
     </Modal>

@@ -43,7 +43,7 @@ const Director = () => {
   const defaultColDef: any = useMemo(
     () => ({
       sortable: true,
-      resizable: false,
+      resizable: true,
       editable: false,
       flex: 1,
       suppressMenu: true,
@@ -110,7 +110,7 @@ const Director = () => {
         password: search.accountAdmin?.password,
       },
       id: rowSelected.data.id,
-    }
+    };
     try {
       const { data } = await directorApi.deleteDirector(payload);
       console.log({ data });
@@ -170,6 +170,7 @@ const Director = () => {
         pageSize={search.pageSize}
         totalRecords={totalRecords}
         setSearch={setSearch}
+        setIsRefetch={setIsRefetch}
       />
 
       <ModalDelete

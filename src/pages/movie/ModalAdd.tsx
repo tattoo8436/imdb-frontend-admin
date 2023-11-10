@@ -24,6 +24,7 @@ import { IMovie, IOption } from "../../utils/type";
 import { optionLanguageEdit, optionType } from "../../utils/constant";
 import { movieApi } from "../../apis/movieApi";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { filterOption } from "../../utils";
 
 interface IProps {
   hookForm: UseFormReturn<IMovie, any, undefined>;
@@ -33,8 +34,8 @@ interface IProps {
   setIsRefetch: React.Dispatch<React.SetStateAction<boolean>>;
   account: any;
   listGenres: Array<IOption>;
-  listActors: Array<IOption>;
-  listDirectors: Array<IOption>;
+  listActors: any[];
+  listDirectors: any[];
 }
 
 const ModalAdd = (props: IProps) => {
@@ -168,9 +169,7 @@ const ModalAdd = (props: IProps) => {
             </Col>
 
             <Col span={24} className="form__item form__item--text-area">
-              <div className="form__item__label">
-                Nội dung
-              </div>
+              <div className="form__item__label">Nội dung</div>
               <Controller
                 name="description"
                 control={hookForm.control}
@@ -185,9 +184,7 @@ const ModalAdd = (props: IProps) => {
             </Col>
 
             <Col span={12} className="form__item item-image">
-              <div className="form__item__label">
-                Ảnh
-              </div>
+              <div className="form__item__label">Ảnh</div>
               <Controller
                 name="image"
                 control={hookForm.control}
@@ -238,7 +235,8 @@ const ModalAdd = (props: IProps) => {
                 control={hookForm.control}
                 rules={{
                   validate: {
-                    required: (v: any) => v.length > 0 || "Thể loại là bắt buộc",
+                    required: (v: any) =>
+                      v.length > 0 || "Thể loại là bắt buộc",
                   },
                 }}
                 render={({ field, fieldState }) => (
@@ -248,6 +246,10 @@ const ModalAdd = (props: IProps) => {
                     placeholder="Chọn thể loại"
                     options={listGenres}
                     mode="multiple"
+                    filterOption={(input, option) =>
+                      option?.label.toLowerCase().includes(input.toLowerCase())
+                    }
+                    showSearch
                   />
                 )}
               />
@@ -260,9 +262,7 @@ const ModalAdd = (props: IProps) => {
 
             <Col span={12} className="form__item item-actor">
               <div className="item-actor__header">
-                <div className="item-actor__header__label">
-                  Diễn viên
-                </div>
+                <div className="item-actor__header__label">Diễn viên</div>
               </div>
               {hookFieldActor.fields?.map((i, index) => {
                 return (
@@ -276,6 +276,12 @@ const ModalAdd = (props: IProps) => {
                           options={listActors}
                           className="item-actor__input__actor"
                           placeholder="Chọn diễn viên"
+                          filterOption={(input, option) =>
+                            option.labelText
+                              .toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                          showSearch
                         />
                       )}
                     />
@@ -322,6 +328,12 @@ const ModalAdd = (props: IProps) => {
                     placeholder="Chọn đạo diễn"
                     options={listDirectors}
                     mode="multiple"
+                    filterOption={(input, option) =>
+                      option.labelText
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    showSearch
                   />
                 )}
               />
@@ -391,7 +403,12 @@ const ModalAdd = (props: IProps) => {
           >
             Lưu
           </Button>
-          <Button onClick={() => console.log(hookForm.getValues())}>Log</Button>
+          <Button
+            className="d-none"
+            onClick={() => console.log(hookForm.getValues())}
+          >
+            Log
+          </Button>
         </div>
       </form>
     </Modal>

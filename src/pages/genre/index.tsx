@@ -43,7 +43,7 @@ const Genre = () => {
   const defaultColDef: any = useMemo(
     () => ({
       sortable: true,
-      resizable: false,
+      resizable: true,
       editable: false,
       flex: 1,
       suppressMenu: true,
@@ -170,6 +170,7 @@ const Genre = () => {
         pageSize={search.pageSize}
         totalRecords={totalRecords}
         setSearch={setSearch}
+        setIsRefetch={setIsRefetch}
       />
 
       <ModalDelete

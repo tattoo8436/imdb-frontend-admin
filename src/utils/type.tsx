@@ -97,6 +97,7 @@ export interface ISearchMovie {
   type: number | null;
   genreId: number | null;
   score: number | null;
+  numberVote?: number | null;
   releaseDate: number | string | null;
   language: string | null;
   sortBy?: string | null;
@@ -132,6 +133,7 @@ export interface IMovie {
   listDirectorIds?: Array<number>;
   listMovieDirectors?: Array<any>;
   listEpisode?: Array<any>;
+  numberLastVote?: number;
 }
 
 export interface IEpisode {

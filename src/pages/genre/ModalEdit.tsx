@@ -58,7 +58,7 @@ const ModalEdit = (props: IProps) => {
       toast.success("Sửa thành công!", { autoClose: 3000 });
     } catch (error: any) {
       console.log(error);
-      toast.error(error?.response?.data, {autoClose: 3000});
+      toast.error(error?.response?.data, { autoClose: 3000 });
       setLoading(false);
     }
   };
@@ -91,8 +91,7 @@ const ModalEdit = (props: IProps) => {
                 control={hookForm.control}
                 rules={{
                   validate: {
-                    required: (v) =>
-                      v.trim().length > 0 || "Tên là bắt buộc",
+                    required: (v) => v.trim().length > 0 || "Tên là bắt buộc",
                   },
                 }}
                 render={({ field, fieldState }) => (
@@ -126,7 +125,12 @@ const ModalEdit = (props: IProps) => {
           >
             Lưu
           </Button>
-          <Button onClick={() => console.log(hookForm.getValues())}>Log</Button>
+          <Button
+            className="d-none"
+            onClick={() => console.log(hookForm.getValues())}
+          >
+            Log
+          </Button>
         </div>
       </form>
     </Modal>

@@ -10,11 +10,13 @@ import React from "react";
 import { DEFAULT_FORMAT_DATE, optionLanguageEdit } from "../../utils/constant";
 import { BASE_URL_API } from "../../utils";
 import ImageDefault from "../../assets/images/user-default.png";
+import { IEpisode } from "../../utils/type";
 
 export const getColumnDefs = (
   gridRef: React.MutableRefObject<any>,
   setOpenModalDelete: React.Dispatch<React.SetStateAction<boolean>>,
-  setOpenModalEdit: React.Dispatch<React.SetStateAction<boolean>>
+  setOpenModalEdit: React.Dispatch<React.SetStateAction<boolean>>,
+  listEpisodes: IEpisode[]
 ) => {
   return [
     {
@@ -37,7 +39,7 @@ export const getColumnDefs = (
       cellClass: "align-center",
       cellRenderer: (e: any) => {
         return (
-          <Image
+          <img
             src={e.value ? `${BASE_URL_API}/image/${e.value}` : ImageDefault}
             alt="Ảnh"
             className="cell-image cell-image__movie"
@@ -60,7 +62,11 @@ export const getColumnDefs = (
       minWidth: 200,
       flex: 0.5,
       cellRenderer: (e: any) => {
-        return e.value ?? "";
+        return (
+          <Tooltip title={e.value ?? ""} arrow>
+            <div>{e.value ?? ""}</div>
+          </Tooltip>
+        );
       },
     },
     {
@@ -68,7 +74,11 @@ export const getColumnDefs = (
       headerName: "Nội dung",
       minWidth: 200,
       cellRenderer: (e: any) => {
-        return e.value ?? "";
+        return (
+          <Tooltip title={e.value ?? ""} arrow>
+            <div>{e.value ?? ""}</div>
+          </Tooltip>
+        );
       },
     },
     {
@@ -106,12 +116,14 @@ export const getColumnDefs = (
               />
             </Tooltip>
 
-            {/* <Tooltip title="Xoá" arrow>
-              <DeleteFilled
-                className="cell-action__btn btn-delete"
-                onClick={() => setOpenModalDelete(true)}
-              />
-            </Tooltip> */}
+            {e.rowIndex === listEpisodes.length - 1 && (
+              <Tooltip title="Xoá" arrow>
+                <DeleteFilled
+                  className="cell-action__btn btn-delete"
+                  onClick={() => setOpenModalDelete(true)}
+                />
+              </Tooltip>
+            )}
           </div>
         );
       },

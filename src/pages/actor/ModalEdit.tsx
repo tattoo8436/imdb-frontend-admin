@@ -199,7 +199,12 @@ const ModalEdit = (props: IProps) => {
           >
             Lưu
           </Button>
-          <Button onClick={() => console.log(hookForm.getValues())}>Log</Button>
+          <Button
+            className="d-none"
+            onClick={() => console.log(hookForm.getValues())}
+          >
+            Log
+          </Button>
         </div>
       </form>
     </Modal>

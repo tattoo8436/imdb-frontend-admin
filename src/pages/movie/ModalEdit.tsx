@@ -32,8 +32,8 @@ interface IProps {
   setIsRefetch: React.Dispatch<React.SetStateAction<boolean>>;
   account: any;
   listGenres: Array<IOption>;
-  listActors: Array<IOption>;
-  listDirectors: Array<IOption>;
+  listActors: any[];
+  listDirectors: any[];
 }
 
 const ModalEdit = (props: IProps) => {
@@ -199,9 +199,7 @@ const ModalEdit = (props: IProps) => {
             </Col>
 
             <Col span={24} className="form__item form__item--text-area">
-              <div className="form__item__label">
-                Nội dung
-              </div>
+              <div className="form__item__label">Nội dung</div>
               <Controller
                 name="description"
                 control={hookForm.control}
@@ -216,9 +214,7 @@ const ModalEdit = (props: IProps) => {
             </Col>
 
             <Col span={12} className="form__item item-image">
-              <div className="form__item__label">
-                Ảnh
-              </div>
+              <div className="form__item__label">Ảnh</div>
               <Controller
                 name="image"
                 control={hookForm.control}
@@ -280,6 +276,10 @@ const ModalEdit = (props: IProps) => {
                     placeholder="Chọn thể loại"
                     options={listGenres}
                     mode="multiple"
+                    filterOption={(input, option) =>
+                      option?.label.toLowerCase().includes(input.toLowerCase())
+                    }
+                    showSearch
                   />
                 )}
               />
@@ -308,6 +308,12 @@ const ModalEdit = (props: IProps) => {
                           options={listActors}
                           className="item-actor__input__actor"
                           placeholder="Chọn diễn viên"
+                          filterOption={(input, option) =>
+                            option.labelText
+                              .toLowerCase()
+                              .includes(input.toLowerCase())
+                          }
+                          showSearch
                         />
                       )}
                     />
@@ -354,6 +360,12 @@ const ModalEdit = (props: IProps) => {
                     placeholder="Chọn đạo diễn"
                     options={listDirectors}
                     mode="multiple"
+                    filterOption={(input, option) =>
+                      option.labelText
+                        .toLowerCase()
+                        .includes(input.toLowerCase())
+                    }
+                    showSearch
                   />
                 )}
               />
@@ -423,7 +435,12 @@ const ModalEdit = (props: IProps) => {
           >
             Lưu
           </Button>
-          <Button onClick={() => console.log(hookForm.getValues())}>Log</Button>
+          <Button
+            className="d-none"
+            onClick={() => console.log(hookForm.getValues())}
+          >
+            Log
+          </Button>
         </div>
       </form>
     </Modal>

@@ -42,7 +42,7 @@ const Episode = () => {
   const defaultColDef: any = useMemo(
     () => ({
       sortable: false,
-      resizable: false,
+      resizable: true,
       editable: false,
       flex: 1,
       suppressMenu: true,
@@ -53,18 +53,13 @@ const Episode = () => {
   const columnDefs: any = getColumnDefs(
     gridRef,
     setOpenModalDelete,
-    setOpenModalEdit
+    setOpenModalEdit,
+    listEpisodes
   );
 
   const fetchMovie = async () => {
     try {
-      const { data } = await movieApi.getMovieById({
-        accountAdmin: {
-          username: account?.username,
-          password: account?.password,
-        },
-        id: movieId,
-      });
+      const { data } = await movieApi.getMovieById(movieId);
       console.log({ data });
       setListSeason(
         Array.from({ length: data?.numberSeason }, (_, index) => index + 1)
