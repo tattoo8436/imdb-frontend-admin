@@ -46,7 +46,11 @@ const NumberVote = () => {
     try {
       const { data } = await movieApi.getStatisticMovie(movie.id);
       console.log(data);
-      setMovie({ id: movie.id ?? 0, name: movie.name, listNumberVotes: data });
+      setMovie({
+        id: movie.id ?? 0,
+        name: movie.name,
+        listNumberVotes: data.reverse(),
+      });
     } catch (error) {
       console.log(error);
     }

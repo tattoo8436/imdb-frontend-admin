@@ -66,7 +66,7 @@ const Trending = () => {
                   {movie.score?.toFixed(1)}
                 </div>
 
-                <div className="movie-item__detail__number-vote">
+                <div className="movie-item__detail__number-vote d-none">
                   Tổng số lượt đánh giá:{" "}
                   <strong>{numeral(movie.numberVote).format("0,")}</strong>
                 </div>
