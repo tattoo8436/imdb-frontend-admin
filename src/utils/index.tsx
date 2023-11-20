@@ -2,7 +2,7 @@ export const getCurrentAccount: any = () => {
   return JSON.parse(localStorage.getItem("account") ?? "{}");
 };
 
-export const BASE_URL_API = "http://localhost:8080/api";
+export const BASE_URL_API = "https://imdb-service-production.up.railway.app/api";
 
 export const validateFileSize = (file: File | null) => {
   if (file === null) {
